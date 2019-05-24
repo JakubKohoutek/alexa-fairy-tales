@@ -1,0 +1,27 @@
+{
+  "name": "alexa-fairy-tales",
+  "version": "1.0.0",
+  "description": "Repository with custom skill for Amazon Alexa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JakubKohoutek/alexa-fairy-tales.git"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "intent"
+  ],
+  "author": "Jakub Kohoutek",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/JakubKohoutek/alexa-fairy-tales/issues"
+  },
+  "homepage": "https://github.com/JakubKohoutek/alexa-fairy-tales#readme",
+  "dependencies": {
+    "aws-sdk": "^2.463.0"
+  }
+}
