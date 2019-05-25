@@ -2,9 +2,14 @@ import * as Alexa from 'ask-sdk';
 import bodyParser from 'body-parser';
 import express from 'express';
 
+import {
+  AudioPlayerEventHandler,
+  StartPlaybackHandler,
+  StopPlaybackHandler
+} from './handlers/audio_player';
 import errorHandler from './handlers/error';
 import launchHandler from './handlers/launch';
-import sessionEndedHandler from './handlers/sessionEnded';
+import sessionEndedHandler from './handlers/session_ended';
 import cancelStopIntent from './intents/cancel_stop';
 import helpIntent from './intents/help';
 import playIntent from './intents/play';
@@ -15,6 +20,9 @@ export const skill = Alexa.SkillBuilders.custom()
     sessionEndedHandler,
     cancelStopIntent,
     helpIntent,
+    AudioPlayerEventHandler,
+    StartPlaybackHandler,
+    StopPlaybackHandler,
     playIntent
   )
   .addErrorHandlers(errorHandler)
@@ -22,6 +30,7 @@ export const skill = Alexa.SkillBuilders.custom()
 
 const app = express();
 app.use(bodyParser.json());
+app.use(express.static('public_media'));
 
 app.post('/', async (req, res) => {
   const response = await skill.invoke(req.body);

@@ -6,7 +6,7 @@ const launchHandler = {
     handlerInput.requestEnvelope.request.type === 'LaunchRequest',
 
   handle: (handlerInput: Alexa.HandlerInput): Response => {
-    const textToTell = 'Welcome to the Fairy Tales skill';
+    const textToTell = 'Welcome to the Fairy Tales skill. You can tell me to play.';
     return handlerInput.responseBuilder
       .speak(textToTell)
       .reprompt(textToTell)
