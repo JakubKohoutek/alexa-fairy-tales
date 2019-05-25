@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc && echo 'Production build available in lib folder'",
-    "deploy": "npx tsc && npx node lib/index.js",
-    "start": "npx ts-node src/index.ts",
+    "start": "npx tsc && npx node lib/index.js",
+    "try": "npx ts-node src/index.ts",
     "lint": "npx tslint --project . && echo 'No issues found'"
   },
   "repository": {
@@ -15,8 +15,9 @@
   },
   "keywords": [
     "alexa",
+    "skill handler",
     "skill",
-    "intent"
+    "ask-sdk"
   ],
   "author": "Jakub Kohoutek",
   "license": "GPL-3.0-or-later",
