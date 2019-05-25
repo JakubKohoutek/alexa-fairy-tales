@@ -21,7 +21,6 @@
     "no-trailing-whitespace": true,
     "export-name": false,
     "import-name": false,
-    "object-curly-spacing": [true, "never"],
     "arrow-return-shorthand": [true, "multiline"]
   },
   "jsRules": {
