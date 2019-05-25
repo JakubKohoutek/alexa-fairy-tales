@@ -4,7 +4,10 @@
   "description": "Repository with custom skill for Amazon Alexa",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc && echo 'Production build available in lib folder'",
+    "deploy": "npx tsc && npx node lib/index.js",
+    "start": "npx ts-node src/index.ts",
+    "lint": "npx tslint --project . && echo 'No issues found'"
   },
   "repository": {
     "type": "git",
@@ -22,10 +25,16 @@
   },
   "homepage": "https://github.com/JakubKohoutek/alexa-fairy-tales#readme",
   "dependencies": {
-    "alexa-skill-local": "^1.3.0",
-    "ask-sdk": "^2.5.2"
+    "ask-sdk": "^2.5.2",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.0"
   },
   "devDependencies": {
-    "@types/node": "^12.0.2"
+    "@types/express": "^4.16.1",
+    "@types/node": "^12.0.2",
+    "ts-node": "^8.1.1",
+    "tslint": "^5.16.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.4.5"
   }
 }
