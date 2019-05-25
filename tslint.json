@@ -1,11 +1,11 @@
 {
-  "extends": "tslint:recommended",
+  "extends": ["tslint:recommended", "tslint-eslint-rules"],
   "linterOptions": {
     "exclude": ["**/*.js", "**/*.jsx"]
   },
   "rules": {
-    "quotemark": [true, "single"],
-    "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+    "quotemark": [true, "single", "avoid-escape"],
+    "trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
     "max-line-length": {
       "options": [120]
     },
@@ -21,7 +21,9 @@
     "no-trailing-whitespace": true,
     "export-name": false,
     "import-name": false,
-    "arrow-return-shorthand": [true, "multiline"]
+    "arrow-return-shorthand": [true, "multiline"],
+    "object-curly-spacing": [true, "never"],
+    "array-bracket-spacing": [true, "never"]
   },
   "jsRules": {
     "max-line-length": {
