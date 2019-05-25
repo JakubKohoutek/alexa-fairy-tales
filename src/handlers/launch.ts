@@ -1,11 +1,12 @@
 import * as Alexa from 'ask-sdk';
+import {Response} from 'ask-sdk-model';
 
 const launchHandler = {
   canHandle: (handlerInput: Alexa.HandlerInput): boolean =>
     handlerInput.requestEnvelope.request.type === 'LaunchRequest',
 
-  handle: (handlerInput: Alexa.HandlerInput) => {
-    const textToTell = 'Welcome to the Fairy Tales sklill';
+  handle: (handlerInput: Alexa.HandlerInput): Response => {
+    const textToTell = 'Welcome to the Fairy Tales skill';
     return handlerInput.responseBuilder
       .speak(textToTell)
       .reprompt(textToTell)
