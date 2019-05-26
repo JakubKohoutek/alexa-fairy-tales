@@ -21,6 +21,7 @@ npm start
 ```
 
 ## Tip for Development on Local Machine
+
 For fast development and testing I utilized an SSH reverse tunnel to my server. Very
 useful guide with details on how to do that can be found 
 [here](https://jerrington.me/posts/2019-01-29-self-hosted-ngrok.html).
@@ -33,4 +34,13 @@ For example, to expose my local port `3000` on my public server on the port `333
 I executed:
 ```bash
 ssh -R 3333:localhost:3000 user@mydomain.com
+```
+
+## Configuration
+
+Accepted environment variables:
+
+```bash
+MEDIA_URL_BASE='https://domain-with-media-files.com/'
+PORT=3333
 ```
