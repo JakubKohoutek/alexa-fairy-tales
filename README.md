@@ -13,6 +13,9 @@ Before running the application, one must install all dependencies:
 npm install
 ```
 
+Also it is necessary to create `public_media` folder in the project's root folder with
+media files that Alexa should play. 
+
 ## Running the Application
 
 To run the skill handler, execute:
