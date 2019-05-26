@@ -1,14 +1,15 @@
-import * as Alexa from 'ask-sdk';
+import {HandlerInput} from 'ask-sdk';
 import {Response} from 'ask-sdk-model';
 
 const cancelStopIntent = {
-  canHandle: (handlerInput: Alexa.HandlerInput): boolean =>
+  canHandle: (handlerInput: HandlerInput): boolean =>
     handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
     (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
-    handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent'),
+      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent'),
 
-  handle: (handlerInput: Alexa.HandlerInput): Response => {
+  handle: (handlerInput: HandlerInput): Response => {
     const textToTell = 'Good night.';
+
     return handlerInput.responseBuilder
       .speak(textToTell)
       .withSimpleCard('Fairy Tales', textToTell)

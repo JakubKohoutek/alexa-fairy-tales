@@ -3,6 +3,9 @@
   "linterOptions": {
     "exclude": ["**/*.js", "**/*.jsx"]
   },
+  "rulesDirectory": [
+    "node_modules/tslint-lines-between-class-members"
+  ],
   "rules": {
     "quotemark": [true, "single", "avoid-escape"],
     "trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
@@ -16,14 +19,17 @@
     "no-consecutive-blank-lines": false,
     "no-console": {
       "severity": "warning",
-      "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
+      "options": ["debug", "log", "trace"]
     },
     "no-trailing-whitespace": true,
     "export-name": false,
     "import-name": false,
     "arrow-return-shorthand": [true, "multiline"],
     "object-curly-spacing": [true, "never"],
-    "array-bracket-spacing": [true, "never"]
+    "array-bracket-spacing": [true, "never"],
+    "interface-name": false,
+    "newline-before-return": true,
+    "lines-between-class-members": [true, 1]
   },
   "jsRules": {
     "max-line-length": {
