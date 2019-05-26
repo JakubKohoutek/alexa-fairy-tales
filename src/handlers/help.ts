@@ -1,7 +1,7 @@
 import {HandlerInput} from 'ask-sdk';
 import {Response} from 'ask-sdk-model';
 
-const helpIntent = {
+const helpHandler = {
   canHandle: (handlerInput: HandlerInput): boolean =>
     handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
     handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent',
@@ -17,4 +17,4 @@ const helpIntent = {
   }
 };
 
-export default helpIntent;
+export default helpHandler;

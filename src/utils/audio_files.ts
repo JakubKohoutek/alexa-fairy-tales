@@ -18,7 +18,7 @@ export default class AudioFiles {
         return [
           ...acc,
           {
-            title: fileName,
+            title: fileName.split('.mp3')[0],
             url: `${MEDIA_URL_BASE}${fileName}`
           }
         ];

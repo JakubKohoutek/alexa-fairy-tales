@@ -1,7 +1,7 @@
 import {HandlerInput} from 'ask-sdk';
 import {Response} from 'ask-sdk-model';
 
-const cancelStopIntent = {
+const cancelStopHandler = {
   canHandle: (handlerInput: HandlerInput): boolean =>
     handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
     (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent' ||
@@ -17,4 +17,4 @@ const cancelStopIntent = {
   }
 };
 
-export default cancelStopIntent;
+export default cancelStopHandler;

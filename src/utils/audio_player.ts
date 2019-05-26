@@ -17,16 +17,17 @@ export const getPlaybackInfo = async (
 ): Promise<PlaybackInfo> =>
   (await handlerInput.attributesManager.getPersistentAttributes()) as PlaybackInfo;
 
-export const play = async (handlerInput: HandlerInput): Promise<Response> => {
+export const play = async (handlerInput: HandlerInput, resume: boolean): Promise<Response> => {
   const {
     currentIndex,
     offsetInMilliseconds,
     playlist
   } = await handlerInput.attributesManager.getPersistentAttributes();
   const currentAudioFile: AudioFile = playlist[currentIndex];
+  const textToTell = resume ? '' : `Playing ${currentAudioFile.title}`;
 
   return handlerInput.responseBuilder
-    .speak(`Playing ${currentAudioFile.title}`)
+    .speak(textToTell)
     .withShouldEndSession(true)
     .addAudioPlayerPlayDirective(
       'REPLACE_ALL',

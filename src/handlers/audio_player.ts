@@ -5,23 +5,28 @@ import {getOffset, getPlaybackInfo, play} from '../utils/audio_player';
 export const startPlaybackHandler = {
   canHandle: (handlerInput: HandlerInput): boolean => {
     const request = handlerInput.requestEnvelope.request;
-    if (request.type === 'IntentRequest' && request.intent.name === 'PlayAudio') {
-      return true;
-    }
-    if (request.type === 'PlaybackController.PlayCommandIssued') {
-      return true;
-    }
-    if (request.type === 'IntentRequest') {
-      return (
-        request.intent.name === 'PlayAudio' ||
-        request.intent.name === 'AMAZON.ResumeIntent'
-      );
-    }
 
-    return false;
+    return (
+      request.type === 'PlaybackController.PlayCommandIssued' ||
+      (request.type === 'IntentRequest' && request.intent.name === 'PlayAudio')
+    );
   },
 
-  handle: async (handlerInput: HandlerInput): Promise<Response> => play(handlerInput)
+  handle: async (handlerInput: HandlerInput): Promise<Response> =>
+    play(handlerInput, false)
+};
+
+export const resumePlaybackHandler = {
+  canHandle: (handlerInput: HandlerInput): boolean => {
+    const request = handlerInput.requestEnvelope.request;
+
+    return (
+      request.type === 'IntentRequest' && request.intent.name === 'AMAZON.ResumeIntent'
+    );
+  },
+
+  handle: async (handlerInput: HandlerInput): Promise<Response> =>
+    play(handlerInput, true)
 };
 
 export const stopPlaybackHandler = {
@@ -53,7 +58,7 @@ export const startOverHandler = {
     const playbackInfo = await getPlaybackInfo(handlerInput);
     playbackInfo.offsetInMilliseconds = 0;
 
-    return play(handlerInput);
+    return play(handlerInput, false);
   }
 };
 
@@ -73,7 +78,29 @@ export const nextHandler = {
     playbackInfo.currentIndex =
       (playbackInfo.currentIndex + 1) % playbackInfo.playlist.length;
 
-    return play(handlerInput);
+    return play(handlerInput, false);
+  }
+};
+
+export const previousHandler = {
+  canHandle: async (handlerInput: HandlerInput): Promise<boolean> => {
+    const request = handlerInput.requestEnvelope.request;
+
+    return (
+      request.type === 'PlaybackController.PreviousCommandIssued' ||
+      (request.type === 'IntentRequest' &&
+        request.intent.name === 'AMAZON.PreviousIntent')
+    );
+  },
+
+  handle: async (handlerInput: HandlerInput): Promise<Response> => {
+    const playbackInfo = await getPlaybackInfo(handlerInput);
+    playbackInfo.offsetInMilliseconds = 0;
+    const previousIndex = playbackInfo.currentIndex - 1;
+    const playlistLength = playbackInfo.playlist.length;
+    playbackInfo.currentIndex = previousIndex < 0 ? playlistLength - 1 : previousIndex;
+
+    return play(handlerInput, false);
   }
 };
 
