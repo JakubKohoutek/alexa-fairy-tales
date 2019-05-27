@@ -5,7 +5,7 @@ import {CustomSkill} from 'ask-sdk-core/dist/skill/CustomSkill';
 
 const PORT = process.env.PORT || 3000;
 
-export const createServer = async (skill: CustomSkill): Promise<void> => {
+export const createServer = (skill: CustomSkill): void => {
   const app = express();
 
   app.use(bodyParser.json());

@@ -1,6 +1,7 @@
 import {HandlerInput} from 'ask-sdk';
 import {Response} from 'ask-sdk-model';
 import {getOffset, getPlaybackInfo, play} from '../utils/audio_player';
+import {setNextFile, setPrevFile} from '../utils/playback_info';
 
 export const startPlaybackHandler = {
   canHandle: (handlerInput: HandlerInput): boolean => {
@@ -74,9 +75,7 @@ export const nextHandler = {
 
   handle: async (handlerInput: HandlerInput): Promise<Response> => {
     const playbackInfo = await getPlaybackInfo(handlerInput);
-    playbackInfo.offsetInMilliseconds = 0;
-    playbackInfo.currentIndex =
-      (playbackInfo.currentIndex + 1) % playbackInfo.playlist.length;
+    setNextFile(playbackInfo);
 
     return play(handlerInput, false);
   }
@@ -95,10 +94,7 @@ export const previousHandler = {
 
   handle: async (handlerInput: HandlerInput): Promise<Response> => {
     const playbackInfo = await getPlaybackInfo(handlerInput);
-    playbackInfo.offsetInMilliseconds = 0;
-    const previousIndex = playbackInfo.currentIndex - 1;
-    const playlistLength = playbackInfo.playlist.length;
-    playbackInfo.currentIndex = previousIndex < 0 ? playlistLength - 1 : previousIndex;
+    setPrevFile(playbackInfo);
 
     return play(handlerInput, false);
   }
@@ -118,6 +114,7 @@ export const audioPlayerEventHandler = {
         console.info(audioPlayerEventName);
         break;
       case 'PlaybackFinished':
+        setNextFile(playbackInfo);
         console.info(audioPlayerEventName);
         break;
       case 'PlaybackStopped':
