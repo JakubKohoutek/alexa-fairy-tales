@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Build and start the app
           command: |
-            ssh "$USER"@"$IP_ADDRESS"
+            ssh "$USER"@"$IP_ADDRESS" << EOF
             cd alexa-fairy-tales
             git pull
             nvm use 12
@@ -20,6 +20,7 @@ jobs:
             lsof -i :3333 | grep node | awk '{print $2}' | xargs kill
             PORT=3333 node ./lib/index.js &
             exit
+            EOF
             # docker push here
 workflows:
   version: 2
