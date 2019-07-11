@@ -8,6 +8,7 @@ jobs:
       # we are telling docker to get another container and link it
       # - setup_remote_docker:
       #     docker_layer_caching: false
+      - run: ssh-keyscan $IP_ADDRESS >> ~/.ssh/known_hosts
       - run:
           name: Build and start the app
           command: |
