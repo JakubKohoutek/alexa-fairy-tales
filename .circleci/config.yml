@@ -10,7 +10,7 @@ jobs:
       #     docker_layer_caching: false
       - run:
           name: Build and start the app
-          command:
+          command: |
             ssh "$USER"@"$IP_ADDRESS"
             cd alexa-fairy-tales
             git pull
