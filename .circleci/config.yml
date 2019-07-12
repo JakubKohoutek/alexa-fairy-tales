@@ -19,7 +19,7 @@ jobs:
             nvm use 12
             npm run build
             PROCESS_ID=$( lsof -i :3333 -t )
-            echo "Killing $PROCESS_ID"
+            echo "Killing process $PROCESS_ID"
             kill $PROCESS_ID
             ERROR_FILE="./process.err"
             LOG_FILE="./process.out"
@@ -31,7 +31,6 @@ jobs:
               cat "$ERROR_FILE"
               exit 1
             else 
-              echo "$FILE does not exist"
               cat "$LOG_FILE"
               exit
             fi
