@@ -27,6 +27,7 @@ jobs:
             cd alexa-fairy-tales
             git pull
             nvm use 12
+            npm ci
             npm run build
             PROCESS_ID=$( lsof -i :3333 -t )
             echo "Killing process $PROCESS_ID"
