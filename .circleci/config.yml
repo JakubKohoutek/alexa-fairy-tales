@@ -13,17 +13,29 @@ jobs:
           name: Build and start the app
           command: |
             ssh "$USER"@"$IP_ADDRESS" << 'EOF'
+            set -e
             cd alexa-fairy-tales
             git pull
             nvm use 12
             npm run build
-            PROCESS_ID=`lsof -i :3333 -t`
-            echo $PROCESS_ID
+            PROCESS_ID=$( lsof -i :3333 -t )
+            echo "Killing $PROCESS_ID"
             kill $PROCESS_ID
-            PORT=3333 nohup node ./lib/index.js > process.out 2> process.err < /dev/null &
-            exit
+            ERROR_FILE="./process.err"
+            LOG_FILE="./process.out"
+            rm "$ERROR_FILE"
+            PORT=3333 nohup node ./lib/index.js > "$LOG_FILE" 2> "$ERROR_FILE" < /dev/null &
+            sleep 15
+            if [ -f "$ERROR_FILE" ]; then
+              cat "$LOG_FILE"
+              cat "$ERROR_FILE"
+              exit 1
+            else 
+              echo "$FILE does not exist"
+              cat "$LOG_FILE"
+              exit
+            fi
             EOF
-            # docker push here
 workflows:
   version: 2
   build_test_deploy:
