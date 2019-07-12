@@ -1,14 +1,24 @@
 version: 2
 jobs:
+  test:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - run:
+        name: Run tests
+        command: |
+          npm ci
+          npm run test
   deploy:
     docker:
       - image: circleci/node:12
     steps:
       - checkout
-      # we are telling docker to get another container and link it
-      # - setup_remote_docker:
-      #     docker_layer_caching: false
-      - run: ssh-keyscan $IP_ADDRESS >> ~/.ssh/known_hosts
+      - run: 
+          name: Add server to known hosts
+          command: |
+            ssh-keyscan $IP_ADDRESS >> ~/.ssh/known_hosts
       - run:
           name: Build and start the app
           command: |
@@ -37,7 +47,8 @@ jobs:
             EOF
 workflows:
   version: 2
-  build_test_deploy:
+  release:
     jobs:
+      - test
       - deploy
 

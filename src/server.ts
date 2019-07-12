@@ -1,11 +1,12 @@
 import bodyParser from 'body-parser';
 import express, {Request, Response} from 'express';
+import {Server} from 'http';
 
 import {CustomSkill} from 'ask-sdk-core/dist/skill/CustomSkill';
 
 const PORT = process.env.PORT || 3000;
 
-export const createServer = (skill: CustomSkill): void => {
+export const createServer = (skill: CustomSkill): Server => {
   const app = express();
 
   app.use(bodyParser.json());
@@ -27,7 +28,7 @@ export const createServer = (skill: CustomSkill): void => {
       res.send('Skill handler is up and running.')
   );
 
-  app.listen(
+  return app.listen(
     PORT,
     (): void => {
       console.info(`Skill handler is listening on port ${PORT}!`);

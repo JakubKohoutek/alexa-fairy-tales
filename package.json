@@ -7,6 +7,7 @@
     "build": "npx tsc && echo 'Production build available in lib folder'",
     "start": "npx tsc && npx node lib/index.js",
     "try": "npx ts-node src/index.ts",
+    "test": "npx jest",
     "lint": "npx tslint --project . && echo 'No issues found'"
   },
   "repository": {
@@ -26,13 +27,17 @@
   },
   "homepage": "https://github.com/JakubKohoutek/alexa-fairy-tales#readme",
   "dependencies": {
+    "@types/supertest": "^2.0.8",
     "ask-sdk": "^2.5.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.0"
   },
   "devDependencies": {
     "@types/express": "^4.16.1",
+    "@types/jest": "^24.0.15",
     "@types/node": "^12.0.2",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.2",
     "ts-node": "^8.1.1",
     "tslint": "^5.16.0",
     "tslint-eslint-rules": "^5.4.0",
