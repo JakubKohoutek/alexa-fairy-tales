@@ -17,7 +17,7 @@ jobs:
             git pull
             nvm use 12
             npm run build
-            lsof -i :3333 | grep node | awk '{print $2}' | xargs -n 1 kill
+            kill $( lsof -i :3333 -t )
             PORT=3333 nohup node ./lib/index.js > process.out 2> process.err < /dev/null &
             exit
             EOF
