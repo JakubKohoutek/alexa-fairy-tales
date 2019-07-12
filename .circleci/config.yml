@@ -26,7 +26,7 @@ jobs:
             rm "$ERROR_FILE"
             PORT=3333 nohup node ./lib/index.js > "$LOG_FILE" 2> "$ERROR_FILE" < /dev/null &
             sleep 15
-            if [ -f "$ERROR_FILE" ]; then
+            if [ -s "$ERROR_FILE" ]; then
               cat "$LOG_FILE"
               cat "$ERROR_FILE"
               exit 1
