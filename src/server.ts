@@ -30,7 +30,7 @@ export const createServer = (skill: CustomSkill): void => {
   app.listen(
     PORT,
     (): void => {
-      console.info('Skill handler is listening on port 3000!');
+      console.info(`Skill handler is listening on port ${PORT}!`);
     }
   );
 };

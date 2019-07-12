@@ -6,7 +6,7 @@ import AudioFiles from './utils/audio_files';
   try {
     await AudioFiles.load();
     createServer(skill);
-  } catch(error) {
+  } catch (error) {
     console.error(error);
   }
 })();
