@@ -25,26 +25,12 @@ jobs:
             ssh "$USER"@"$IP_ADDRESS" << 'EOF'
             set -e
             cd alexa-fairy-tales
-            git pull
+            git fetch origin
+            git reset --hard origin/master
             nvm use 12
             npm ci
             npm run build
-            PROCESS_ID=$( lsof -i :3333 -t )
-            echo "Killing process $PROCESS_ID"
-            kill $PROCESS_ID
-            ERROR_FILE="./process.err"
-            LOG_FILE="./process.out"
-            rm "$ERROR_FILE"
-            PORT=3333 nohup node ./lib/index.js > "$LOG_FILE" 2> "$ERROR_FILE" < /dev/null &
-            sleep 15
-            if [ -s "$ERROR_FILE" ]; then
-              cat "$LOG_FILE"
-              cat "$ERROR_FILE"
-              exit 1
-            else 
-              cat "$LOG_FILE"
-              exit
-            fi
+            PORT=3333 npm run deploy
             EOF
 workflows:
   version: 2

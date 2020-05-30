@@ -3,3 +3,6 @@ lib/*
 public_media/*
 
 .env
+
+process.err
+process.out

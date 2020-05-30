@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npx tsc && echo 'Production build available in lib folder'",
     "start": "npx tsc && npx node lib/index.js",
+    "deploy": "scripts/deploy_service.sh",
     "try": "npx ts-node src/index.ts",
     "test": "npx jest",
     "lint": "npx tslint --project . && echo 'No issues found'"
