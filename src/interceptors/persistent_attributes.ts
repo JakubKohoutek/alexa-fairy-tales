@@ -15,7 +15,7 @@ export const loadPersistentAttributes = {
       const initialPlaybackInfo: PlaybackInfo = {
         currentIndex: 0,
         offsetInMilliseconds: 0,
-        playlist: AudioFiles.getShuffledList()
+        playlist: AudioFiles.getList()
       };
       handlerInput.attributesManager.setPersistentAttributes(initialPlaybackInfo);
     }
