@@ -81,8 +81,7 @@ export async function normalizeFiles(dirPath: string): Promise<void> {
   const files = await fs.readdir(dirPath);
   const mp3Files = files.filter((f) => f.endsWith('.mp3') && !f.endsWith('.tmp.mp3'));
 
-  let normalized = 0;
-  let skipped = 0;
+  const toNormalize: string[] = [];
   const updatedMarker = new Map<string, number>();
 
   for (const fileName of mp3Files) {
@@ -91,24 +90,43 @@ export async function normalizeFiles(dirPath: string): Promise<void> {
 
     if (marker.get(fileName) === stat.mtimeMs) {
       updatedMarker.set(fileName, stat.mtimeMs);
-      skipped++;
-      continue;
+    } else {
+      toNormalize.push(fileName);
     }
+  }
 
-    logger.info(`Normalizing audio: ${fileName}`);
+  if (toNormalize.length === 0) {
+    return;
+  }
+
+  normalizationStatus.total = toNormalize.length;
+  normalizationStatus.completed = 0;
+  logger.info(`Audio normalization: ${toNormalize.length} files to process`);
+
+  for (const fileName of toNormalize) {
+    const filePath = path.join(dirPath, fileName);
+
+    normalizationStatus.current = fileName;
+    logger.info(`Normalizing audio (${normalizationStatus.completed + 1}/${toNormalize.length}): ${fileName}`);
     try {
       await normalizeFile(filePath);
       const newStat = await fs.stat(filePath);
       updatedMarker.set(fileName, newStat.mtimeMs);
-      normalized++;
+      normalizationStatus.completed++;
     } catch (error) {
       logger.error(`Failed to normalize ${fileName}:`, error);
+      normalizationStatus.completed++;
     }
   }
 
+  normalizationStatus.current = null;
+  normalizationStatus.total = 0;
   await writeMarker(dirPath, updatedMarker);
-
-  if (normalized > 0 || skipped > 0) {
-    logger.info(`Audio normalization: ${normalized} processed, ${skipped} skipped`);
-  }
+  logger.info(`Audio normalization complete: ${toNormalize.length} files processed`);
 }
+
+export const normalizationStatus = {
+  total: 0,
+  completed: 0,
+  current: null as string | null
+};

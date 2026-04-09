@@ -5,8 +5,12 @@ import {logger} from './utils/logger';
 
 (async () => {
   try {
-    await AudioFiles.load();
+    await AudioFiles.load({skipNormalization: true});
     const server = createServer(skill);
+
+    AudioFiles.load().catch((error) => {
+      logger.error('Background audio normalization failed:', error);
+    });
 
     const shutdown = () => {
       logger.info('Shutting down gracefully...');

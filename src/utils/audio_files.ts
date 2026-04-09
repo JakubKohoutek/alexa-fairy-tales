@@ -12,10 +12,10 @@ export interface AudioFile {
 const MEDIA_URL_BASE = process.env.MEDIA_URL_BASE || 'https://tunnel.myslenkynezastavis.cz/';
 
 export default class AudioFiles {
-  public static async load(): Promise<void> {
-    const path = `${__dirname}/../../public_media`;
+  public static async load(options?: {skipNormalization?: boolean}): Promise<void> {
+    const dirPath = `${__dirname}/../../public_media`;
     try {
-      await fs.access(path);
+      await fs.access(dirPath);
     } catch {
       throw new Error(
         'The directory "public_media" doesn\'t exist at the project\'s root level.\n' +
@@ -24,19 +24,21 @@ export default class AudioFiles {
       );
     }
 
-    try {
-      await normalizeFiles(path);
-    } catch (error) {
-      logger.error('Audio normalization unavailable, skipping:', error);
+    if (!options?.skipNormalization) {
+      try {
+        await normalizeFiles(dirPath);
+      } catch (error) {
+        logger.error('Audio normalization unavailable, skipping:', error);
+      }
     }
 
-    const fileNames = await fs.readdir(path);
+    const fileNames = await fs.readdir(dirPath);
     if (fileNames.length === 0) {
       throw new Error('There are no files in "public_media" directory, please add them.');
     }
 
     const files = fileNames.reduce((acc: AudioFile[], fileName: string) => {
-      if (fileName.endsWith('.mp3')) {
+      if (fileName.endsWith('.mp3') && !fileName.endsWith('.tmp.mp3')) {
         return [
           ...acc,
           {
