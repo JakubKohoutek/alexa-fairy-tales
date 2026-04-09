@@ -1,6 +1,7 @@
 import {createServer} from './server';
 import {skill} from './skill_builder';
 import AudioFiles from './utils/audio_files';
+import {logger} from './utils/logger';
 
 (async () => {
   try {
@@ -8,7 +9,7 @@ import AudioFiles from './utils/audio_files';
     const server = createServer(skill);
 
     const shutdown = () => {
-      console.info('Shutting down gracefully...');
+      logger.info('Shutting down gracefully...');
       server.close(() => {
         process.exit(0);
       });
@@ -17,7 +18,7 @@ import AudioFiles from './utils/audio_files';
     process.on('SIGTERM', shutdown);
     process.on('SIGINT', shutdown);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     process.exit(1);
   }
 })();

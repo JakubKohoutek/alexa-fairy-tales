@@ -1,4 +1,5 @@
 import {Skill} from 'ask-sdk-core';
+import {logger} from './utils/logger';
 import {ExpressAdapter} from 'ask-sdk-express-adapter';
 import express, {Request, Response} from 'express';
 import {Server} from 'http';
@@ -22,7 +23,7 @@ export const createServer = (skill: Skill): Server => {
   return app.listen(
     PORT,
     (): void => {
-      console.info(`Skill handler is listening on port ${PORT}!`);
+      logger.info(`Skill handler is listening on port ${PORT}!`);
     }
   );
 };

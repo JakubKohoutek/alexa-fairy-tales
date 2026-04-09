@@ -2,6 +2,7 @@ import {HandlerInput} from 'ask-sdk';
 import {Response} from 'ask-sdk-model';
 import AudioFiles from '../utils/audio_files';
 import {getOffset, getPlaybackInfo, play} from '../utils/audio_player';
+import {logger} from '../utils/logger';
 import {setNextFile, setPrevFile} from '../utils/playback_info';
 
 export const startPlaybackHandler = {
@@ -158,21 +159,21 @@ export const audioPlayerEventHandler = {
 
     switch (audioPlayerEventName) {
       case 'PlaybackStarted':
-        console.info(audioPlayerEventName);
+        logger.info(audioPlayerEventName);
         break;
       case 'PlaybackFinished':
         setNextFile(playbackInfo);
-        console.info(audioPlayerEventName);
+        logger.info(audioPlayerEventName);
         break;
       case 'PlaybackStopped':
-        console.info(audioPlayerEventName);
+        logger.info(audioPlayerEventName);
         playbackInfo.offsetInMilliseconds = getOffset(handlerInput);
         break;
       case 'PlaybackNearlyFinished':
-        console.info(audioPlayerEventName);
+        logger.info(audioPlayerEventName);
         break;
       case 'PlaybackFailed':
-        console.error(`Playback Failed: ${JSON.stringify(handlerInput.requestEnvelope.request)}`);
+        logger.error(`Playback Failed: ${JSON.stringify(handlerInput.requestEnvelope.request)}`);
         break;
       default:
         throw new Error(`Unexpected audio player event: ${audioPlayerEventName}`);

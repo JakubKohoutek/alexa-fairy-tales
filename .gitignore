@@ -8,3 +8,4 @@ process.err
 process.out
 
 .normalized
+logs/

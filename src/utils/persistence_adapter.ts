@@ -1,5 +1,6 @@
 import {PersistenceAdapter} from 'ask-sdk';
 import {RequestEnvelope} from 'ask-sdk-model';
+import {logger} from './logger';
 
 interface UserData {
   [key: string]: any;
@@ -13,7 +14,7 @@ export default class MemoryPersistenceAdapter implements PersistenceAdapter {
   private data: AdapterData = {};
 
   constructor() {
-    console.info('Initializing in memory persistence adapter.');
+    logger.info('Initializing in memory persistence adapter.');
   }
 
   public async getAttributes(requestEnvelope: RequestEnvelope): Promise<UserData> {

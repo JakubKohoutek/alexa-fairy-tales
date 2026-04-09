@@ -3,6 +3,8 @@ import {promises as fs} from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
 
+import {logger} from './logger';
+
 const execFileAsync = promisify(execFile);
 
 let ffmpegPath: string;
@@ -55,7 +57,7 @@ async function normalizeFile(filePath: string): Promise<void> {
 
 export async function normalizeFiles(dirPath: string): Promise<void> {
   if (!ffmpegPath) {
-    console.info('ffmpeg not available, skipping audio normalization');
+    logger.info('ffmpeg not available, skipping audio normalization');
 
     return;
   }
@@ -78,20 +80,20 @@ export async function normalizeFiles(dirPath: string): Promise<void> {
       continue;
     }
 
-    console.info(`Normalizing audio: ${fileName}`);
+    logger.info(`Normalizing audio: ${fileName}`);
     try {
       await normalizeFile(filePath);
       const newStat = await fs.stat(filePath);
       updatedMarker.set(fileName, newStat.mtimeMs);
       normalized++;
     } catch (error) {
-      console.error(`Failed to normalize ${fileName}:`, error);
+      logger.error(`Failed to normalize ${fileName}:`, error);
     }
   }
 
   await writeMarker(dirPath, updatedMarker);
 
   if (normalized > 0 || skipped > 0) {
-    console.info(`Audio normalization: ${normalized} processed, ${skipped} skipped`);
+    logger.info(`Audio normalization: ${normalized} processed, ${skipped} skipped`);
   }
 }

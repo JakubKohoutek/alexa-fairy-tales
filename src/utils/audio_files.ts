@@ -1,5 +1,6 @@
 import {promises as fs} from 'fs';
 
+import {logger} from './logger';
 import {normalizeFiles} from './normalize_audio';
 import shuffle from './shuffle_list';
 
@@ -26,7 +27,7 @@ export default class AudioFiles {
     try {
       await normalizeFiles(path);
     } catch (error) {
-      console.error('Audio normalization unavailable, skipping:', error);
+      logger.error('Audio normalization unavailable, skipping:', error);
     }
 
     const fileNames = await fs.readdir(path);
