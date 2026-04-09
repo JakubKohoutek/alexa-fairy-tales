@@ -41,3 +41,11 @@ jobs:
             sudo systemctl restart alexa-fairy-tales
             sleep 3
             systemctl is-active alexa-fairy-tales
+      - name: Verify service is reachable
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://tunnel.myslenkynezastavis.cz/)
+          if [ "$response" != "200" ]; then
+            echo "Health check failed: got HTTP $response"
+            exit 1
+          fi
+          echo "Health check passed: HTTP $response"
