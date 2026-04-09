@@ -23,7 +23,15 @@ export const play = async (handlerInput: HandlerInput, resume: boolean): Promise
     offsetInMilliseconds,
     playlist
   } = await handlerInput.attributesManager.getPersistentAttributes();
-  const currentAudioFile: AudioFile = playlist[currentIndex];
+
+  if (!playlist || playlist.length === 0) {
+    return handlerInput.responseBuilder
+      .speak('No audio files are available to play.')
+      .getResponse();
+  }
+
+  const safeIndex = currentIndex >= 0 && currentIndex < playlist.length ? currentIndex : 0;
+  const currentAudioFile: AudioFile = playlist[safeIndex];
   const textToTell = resume ? '' : `Playing ${currentAudioFile.title}`;
 
   return handlerInput.responseBuilder

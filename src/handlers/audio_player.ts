@@ -47,7 +47,7 @@ export const stopPlaybackHandler = {
 };
 
 export const startOverHandler = {
-  canHandle: async (handlerInput: HandlerInput): Promise<boolean> => {
+  canHandle: (handlerInput: HandlerInput): boolean => {
     const request = handlerInput.requestEnvelope.request;
 
     return (
@@ -64,7 +64,7 @@ export const startOverHandler = {
 };
 
 export const nextHandler = {
-  canHandle: async (handlerInput: HandlerInput): Promise<boolean> => {
+  canHandle: (handlerInput: HandlerInput): boolean => {
     const request = handlerInput.requestEnvelope.request;
 
     return (
@@ -82,7 +82,7 @@ export const nextHandler = {
 };
 
 export const previousHandler = {
-  canHandle: async (handlerInput: HandlerInput): Promise<boolean> => {
+  canHandle: (handlerInput: HandlerInput): boolean => {
     const request = handlerInput.requestEnvelope.request;
 
     return (
@@ -125,7 +125,8 @@ export const audioPlayerEventHandler = {
         console.info(audioPlayerEventName);
         break;
       case 'PlaybackFailed':
-        console.error(`Playback Failed :${handlerInput.requestEnvelope.request}`);
+        console.error(`Playback Failed: ${JSON.stringify(handlerInput.requestEnvelope.request)}`);
+        break;
       default:
         throw new Error(`Unexpected audio player event: ${audioPlayerEventName}`);
     }

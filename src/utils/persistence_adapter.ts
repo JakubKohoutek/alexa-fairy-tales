@@ -31,6 +31,7 @@ export default class MemoryPersistenceAdapter implements PersistenceAdapter {
   }
 
   public async deleteAttributes?(requestEnvelope: RequestEnvelope): Promise<void> {
-    this.data = {};
+    const {userId} = requestEnvelope.context.System.user;
+    delete this.data[userId];
   }
 }

@@ -13,18 +13,18 @@ export default class AudioFiles {
   public static async load(): Promise<void> {
     const path = `${__dirname}/../../public_media`;
     try {
-      fs.access(path);
-    } catch (error) {
+      await fs.access(path);
+    } catch {
       throw new Error(
-        `The directory "public_media" doesn't exist at the project's root level,\n` +
-        `Please create this directory and include audio files in it before starting\n` +
-        `the handler`
+        'The directory "public_media" doesn\'t exist at the project\'s root level.\n' +
+        'Please create this directory and include audio files in it before starting\n' +
+        'the handler.'
       );
     }
 
     const fileNames = await fs.readdir(path);
     if (fileNames.length === 0) {
-      throw new Error(`There are no files in "public_media" directory, please add them.`);
+      throw new Error('There are no files in "public_media" directory, please add them.');
     }
 
     const files = fileNames.reduce((acc: AudioFile[], fileName: string) => {

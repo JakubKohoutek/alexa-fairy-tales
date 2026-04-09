@@ -1,3 +1,4 @@
+import {Skill} from 'ask-sdk-core';
 import {Server} from 'http';
 import request from 'supertest';
 
@@ -12,9 +13,12 @@ describe('Server', () => {
     }
   });
 
-
   it('should respond with skill status on get request', async () => {
-    app = createServer({} as any);
+    const mockSkill = {
+      appendAdditionalUserAgent: jest.fn(),
+      invoke: jest.fn()
+    } as unknown as Skill;
+    app = createServer(mockSkill);
 
     const result = await request(app).get('/');
 
