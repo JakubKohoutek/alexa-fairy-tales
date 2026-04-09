@@ -42,14 +42,21 @@ jobs:
             nvm install
             npm ci
             npm run build
+            rm -f ~/alexa-fairy-tales/public_media/.normalized
+            rm -f ~/alexa-fairy-tales/public_media/*.tmp.mp3
             sudo systemctl restart alexa-fairy-tales
             sleep 3
             systemctl is-active alexa-fairy-tales
       - name: Verify service is reachable
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://tunnel.myslenkynezastavis.cz/)
-          if [ "$response" != "200" ]; then
-            echo "Health check failed: got HTTP $response"
-            exit 1
-          fi
-          echo "Health check passed: HTTP $response"
+          for i in $(seq 1 30); do
+            response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 https://tunnel.myslenkynezastavis.cz/)
+            if [ "$response" = "200" ]; then
+              echo "Health check passed: HTTP $response (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i: HTTP $response, retrying in 10s..."
+            sleep 10
+          done
+          echo "Health check failed after 30 attempts"
+          exit 1
