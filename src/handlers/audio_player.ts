@@ -1,5 +1,6 @@
 import {HandlerInput} from 'ask-sdk';
 import {Response} from 'ask-sdk-model';
+import AudioFiles from '../utils/audio_files';
 import {getOffset, getPlaybackInfo, play} from '../utils/audio_player';
 import {setNextFile, setPrevFile} from '../utils/playback_info';
 
@@ -97,6 +98,52 @@ export const previousHandler = {
     setPrevFile(playbackInfo);
 
     return play(handlerInput, false);
+  }
+};
+
+export const shuffleOnHandler = {
+  canHandle: (handlerInput: HandlerInput): boolean => {
+    const request = handlerInput.requestEnvelope.request;
+
+    return (
+      request.type === 'IntentRequest' && request.intent.name === 'AMAZON.ShuffleOnIntent'
+    );
+  },
+
+  handle: async (handlerInput: HandlerInput): Promise<Response> => {
+    const playbackInfo = await getPlaybackInfo(handlerInput);
+    const currentTitle = playbackInfo.playlist[playbackInfo.currentIndex]?.title;
+
+    playbackInfo.shuffleMode = true;
+    playbackInfo.playlist = AudioFiles.getShuffledList();
+
+    const newIndex = playbackInfo.playlist.findIndex((f) => f.title === currentTitle);
+    playbackInfo.currentIndex = newIndex >= 0 ? newIndex : 0;
+
+    return play(handlerInput, true);
+  }
+};
+
+export const shuffleOffHandler = {
+  canHandle: (handlerInput: HandlerInput): boolean => {
+    const request = handlerInput.requestEnvelope.request;
+
+    return (
+      request.type === 'IntentRequest' && request.intent.name === 'AMAZON.ShuffleOffIntent'
+    );
+  },
+
+  handle: async (handlerInput: HandlerInput): Promise<Response> => {
+    const playbackInfo = await getPlaybackInfo(handlerInput);
+    const currentTitle = playbackInfo.playlist[playbackInfo.currentIndex]?.title;
+
+    playbackInfo.shuffleMode = false;
+    playbackInfo.playlist = AudioFiles.getList();
+
+    const newIndex = playbackInfo.playlist.findIndex((f) => f.title === currentTitle);
+    playbackInfo.currentIndex = newIndex >= 0 ? newIndex : 0;
+
+    return play(handlerInput, true);
   }
 };
 

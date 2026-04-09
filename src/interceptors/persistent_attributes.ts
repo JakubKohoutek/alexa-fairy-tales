@@ -6,6 +6,7 @@ export interface PlaybackInfo {
   currentIndex: number;
   offsetInMilliseconds: number;
   playlist: AudioFile[];
+  shuffleMode: boolean;
 }
 
 export const loadPersistentAttributes = {
@@ -15,7 +16,8 @@ export const loadPersistentAttributes = {
       const initialPlaybackInfo: PlaybackInfo = {
         currentIndex: 0,
         offsetInMilliseconds: 0,
-        playlist: AudioFiles.getList()
+        playlist: AudioFiles.getList(),
+        shuffleMode: false
       };
       handlerInput.attributesManager.setPersistentAttributes(initialPlaybackInfo);
     }

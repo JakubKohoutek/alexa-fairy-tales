@@ -1,5 +1,6 @@
 import {promises as fs} from 'fs';
 
+import {normalizeFiles} from './normalize_audio';
 import shuffle from './shuffle_list';
 
 export interface AudioFile {
@@ -21,6 +22,8 @@ export default class AudioFiles {
         'the handler.'
       );
     }
+
+    await normalizeFiles(path);
 
     const fileNames = await fs.readdir(path);
     if (fileNames.length === 0) {

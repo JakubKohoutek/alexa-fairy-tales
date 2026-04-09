@@ -5,6 +5,8 @@ import {
   nextHandler,
   previousHandler,
   resumePlaybackHandler,
+  shuffleOffHandler,
+  shuffleOnHandler,
   startOverHandler,
   startPlaybackHandler,
   stopPlaybackHandler
@@ -28,6 +30,8 @@ export const skill = SkillBuilders.custom()
     sessionEndedHandler,
     cancelStopHandler,
     helpHandler,
+    shuffleOnHandler,
+    shuffleOffHandler,
     audioPlayerEventHandler,
     startPlaybackHandler,
     resumePlaybackHandler,

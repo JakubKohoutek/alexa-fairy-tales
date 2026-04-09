@@ -4,7 +4,8 @@ import {setNextFile, setPrevFile} from './playback_info';
 const makePlaybackInfo = (currentIndex: number, length: number): PlaybackInfo => ({
   currentIndex,
   offsetInMilliseconds: 500,
-  playlist: Array.from({length}, (_, i) => ({title: `track${i}`, url: `http://example.com/${i}.mp3`}))
+  playlist: Array.from({length}, (_, i) => ({title: `track${i}`, url: `http://example.com/${i}.mp3`})),
+  shuffleMode: false
 });
 
 describe('setNextFile', () => {

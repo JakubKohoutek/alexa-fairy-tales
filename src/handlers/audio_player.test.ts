@@ -1,12 +1,17 @@
+import AudioFiles from '../utils/audio_files';
 import {
   audioPlayerEventHandler,
   nextHandler,
   previousHandler,
   resumePlaybackHandler,
+  shuffleOffHandler,
+  shuffleOnHandler,
   startOverHandler,
   startPlaybackHandler,
   stopPlaybackHandler
 } from './audio_player';
+
+jest.mock('../utils/audio_files');
 
 describe('startPlaybackHandler', () => {
   it('should handle PlaybackController.PlayCommandIssued', () => {
@@ -115,6 +120,106 @@ describe('previousHandler', () => {
     } as any;
 
     expect(previousHandler.canHandle(input)).toBe(true);
+  });
+});
+
+describe('shuffleOnHandler', () => {
+  it('should handle AMAZON.ShuffleOnIntent', () => {
+    const input = {
+      requestEnvelope: {request: {type: 'IntentRequest', intent: {name: 'AMAZON.ShuffleOnIntent'}}}
+    } as any;
+
+    expect(shuffleOnHandler.canHandle(input)).toBe(true);
+  });
+
+  it('should not handle other intents', () => {
+    const input = {
+      requestEnvelope: {request: {type: 'IntentRequest', intent: {name: 'AMAZON.NextIntent'}}}
+    } as any;
+
+    expect(shuffleOnHandler.canHandle(input)).toBe(false);
+  });
+
+  it('should enable shuffle and reshuffle playlist keeping current track', async () => {
+    const shuffledList = [
+      {title: 'story2', url: 'http://example.com/story2.mp3'},
+      {title: 'story1', url: 'http://example.com/story1.mp3'}
+    ];
+    (AudioFiles.getShuffledList as jest.Mock).mockReturnValue(shuffledList);
+
+    const playbackInfo = {
+      currentIndex: 0,
+      offsetInMilliseconds: 1000,
+      playlist: [
+        {title: 'story1', url: 'http://example.com/story1.mp3'},
+        {title: 'story2', url: 'http://example.com/story2.mp3'}
+      ],
+      shuffleMode: false
+    };
+    const input = {
+      requestEnvelope: {request: {type: 'IntentRequest', intent: {name: 'AMAZON.ShuffleOnIntent'}}},
+      attributesManager: {
+        getPersistentAttributes: jest.fn().mockResolvedValue(playbackInfo)
+      },
+      responseBuilder: {
+        speak: jest.fn().mockReturnThis(),
+        withShouldEndSession: jest.fn().mockReturnThis(),
+        addAudioPlayerPlayDirective: jest.fn().mockReturnThis(),
+        getResponse: jest.fn().mockReturnValue({})
+      }
+    } as any;
+
+    await shuffleOnHandler.handle(input);
+
+    expect(playbackInfo.shuffleMode).toBe(true);
+    expect(playbackInfo.playlist).toBe(shuffledList);
+    expect(playbackInfo.currentIndex).toBe(1);
+  });
+});
+
+describe('shuffleOffHandler', () => {
+  it('should handle AMAZON.ShuffleOffIntent', () => {
+    const input = {
+      requestEnvelope: {request: {type: 'IntentRequest', intent: {name: 'AMAZON.ShuffleOffIntent'}}}
+    } as any;
+
+    expect(shuffleOffHandler.canHandle(input)).toBe(true);
+  });
+
+  it('should disable shuffle and restore original playlist keeping current track', async () => {
+    const originalList = [
+      {title: 'story1', url: 'http://example.com/story1.mp3'},
+      {title: 'story2', url: 'http://example.com/story2.mp3'}
+    ];
+    (AudioFiles.getList as jest.Mock).mockReturnValue(originalList);
+
+    const playbackInfo = {
+      currentIndex: 0,
+      offsetInMilliseconds: 1000,
+      playlist: [
+        {title: 'story2', url: 'http://example.com/story2.mp3'},
+        {title: 'story1', url: 'http://example.com/story1.mp3'}
+      ],
+      shuffleMode: true
+    };
+    const input = {
+      requestEnvelope: {request: {type: 'IntentRequest', intent: {name: 'AMAZON.ShuffleOffIntent'}}},
+      attributesManager: {
+        getPersistentAttributes: jest.fn().mockResolvedValue(playbackInfo)
+      },
+      responseBuilder: {
+        speak: jest.fn().mockReturnThis(),
+        withShouldEndSession: jest.fn().mockReturnThis(),
+        addAudioPlayerPlayDirective: jest.fn().mockReturnThis(),
+        getResponse: jest.fn().mockReturnValue({})
+      }
+    } as any;
+
+    await shuffleOffHandler.handle(input);
+
+    expect(playbackInfo.shuffleMode).toBe(false);
+    expect(playbackInfo.playlist).toBe(originalList);
+    expect(playbackInfo.currentIndex).toBe(1);
   });
 });
 
