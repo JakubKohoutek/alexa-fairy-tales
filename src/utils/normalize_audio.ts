@@ -52,16 +52,22 @@ async function writeMarker(dirPath: string, entries: Map<string, number>): Promi
 async function normalizeFile(filePath: string): Promise<void> {
   const tempPath = `${filePath}.tmp.mp3`;
 
-  await execFileAsync(ffmpegPath, [
-    '-i', filePath,
-    '-af', 'loudnorm=I=-16:TP=-1.5:LRA=11',
-    '-ar', '48000',
-    '-b:a', '192k',
-    '-y',
-    tempPath
-  ]);
+  try {
+    await execFileAsync(ffmpegPath, [
+      '-i', filePath,
+      '-af', 'loudnorm=I=-16:TP=-1.5:LRA=11',
+      '-ar', '48000',
+      '-b:a', '192k',
+      '-y',
+      tempPath
+    ], {maxBuffer: 50 * 1024 * 1024});
 
-  await fs.rename(tempPath, filePath);
+    await fs.rename(tempPath, filePath);
+  } catch (error) {
+    // Clean up temp file on failure
+    await fs.unlink(tempPath).catch(() => {});
+    throw error;
+  }
 }
 
 export async function normalizeFiles(dirPath: string): Promise<void> {
@@ -73,7 +79,7 @@ export async function normalizeFiles(dirPath: string): Promise<void> {
 
   const marker = await readMarker(dirPath);
   const files = await fs.readdir(dirPath);
-  const mp3Files = files.filter((f) => f.endsWith('.mp3'));
+  const mp3Files = files.filter((f) => f.endsWith('.mp3') && !f.endsWith('.tmp.mp3'));
 
   let normalized = 0;
   let skipped = 0;
