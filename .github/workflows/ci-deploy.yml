@@ -42,7 +42,6 @@ jobs:
             nvm install
             npm ci
             npm run build
-            rm -f ~/alexa-fairy-tales/public_media/.normalized
             rm -f ~/alexa-fairy-tales/public_media/*.tmp.mp3
             sudo systemctl restart alexa-fairy-tales
             sleep 3
