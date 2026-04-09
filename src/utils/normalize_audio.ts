@@ -5,8 +5,13 @@ import {promisify} from 'util';
 
 const execFileAsync = promisify(execFile);
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const ffmpegPath: string = require('ffmpeg-static');
+let ffmpegPath: string;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  ffmpegPath = require('ffmpeg-static');
+} catch {
+  ffmpegPath = '';
+}
 
 interface NormalizedEntry {
   name: string;
@@ -49,6 +54,12 @@ async function normalizeFile(filePath: string): Promise<void> {
 }
 
 export async function normalizeFiles(dirPath: string): Promise<void> {
+  if (!ffmpegPath) {
+    console.info('ffmpeg not available, skipping audio normalization');
+
+    return;
+  }
+
   const marker = await readMarker(dirPath);
   const files = await fs.readdir(dirPath);
   const mp3Files = files.filter((f) => f.endsWith('.mp3'));

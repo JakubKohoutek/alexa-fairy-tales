@@ -23,7 +23,11 @@ export default class AudioFiles {
       );
     }
 
-    await normalizeFiles(path);
+    try {
+      await normalizeFiles(path);
+    } catch (error) {
+      console.error('Audio normalization unavailable, skipping:', error);
+    }
 
     const fileNames = await fs.readdir(path);
     if (fileNames.length === 0) {
