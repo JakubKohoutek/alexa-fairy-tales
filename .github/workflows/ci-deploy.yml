@@ -30,6 +30,10 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            if ! command -v ffmpeg &> /dev/null; then
+              echo "Installing ffmpeg..."
+              sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+            fi
             export NVM_DIR="$HOME/.nvm"
             . "$NVM_DIR/nvm.sh"
             cd ~/alexa-fairy-tales

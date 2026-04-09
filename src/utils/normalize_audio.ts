@@ -1,4 +1,4 @@
-import {execFile} from 'child_process';
+import {execFile, execFileSync} from 'child_process';
 import {promises as fs} from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
@@ -7,13 +7,22 @@ import {logger} from './logger';
 
 const execFileAsync = promisify(execFile);
 
-let ffmpegPath: string;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  ffmpegPath = require('ffmpeg-static');
-} catch {
-  ffmpegPath = '';
+function findFfmpeg(): string {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('ffmpeg-static');
+  } catch {
+    // fall through to system ffmpeg
+  }
+
+  try {
+    return execFileSync('which', ['ffmpeg'], {encoding: 'utf-8'}).trim();
+  } catch {
+    return '';
+  }
 }
+
+const ffmpegPath = findFfmpeg();
 
 interface NormalizedEntry {
   name: string;
